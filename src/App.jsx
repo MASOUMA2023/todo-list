@@ -7,6 +7,7 @@ import TodoList from './TodoList';
 import TodoForm from './TodoForm';
 
 
+
 function App() {
   const [count, setCount] = useState(0)
 const todos= [
@@ -14,11 +15,13 @@ const todos= [
   {id:2, task: 'Build a Todo App'},
   {id:3, task: 'Write Documentation'},
 ];
+const [exampleStateValue, setExampleStateValue] = useState('Example text');
   return (
     <>
     <div className="App">
       <h1>My Todo App</h1>
       <TodoForm/>
+      <p>{exampleStateValue}</p>
       <TodoList todos={todos} />
     </div>
 

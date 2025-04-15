@@ -3,7 +3,7 @@ import React from "react";
 
 
 function TodoListItem({todo}){
-    return <li>{todo.task}</li>;
+    return <li>{todo.title}</li>;
 
 }
 

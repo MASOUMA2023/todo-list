@@ -15,8 +15,8 @@ const handleCancel =()=>{
     setIsEditing(false)
 }
     const handleUpdate = (e)=>{
-     if (!isEditing) return;
      e.preventDefault();
+     if (!isEditing || workingTitle.trim() ==="" || workingTitle ===todo.title ) return;
      onUpdateTodo({...todo, title:workingTitle})
      setIsEditing(false)
     }
@@ -30,18 +30,19 @@ const handleCancel =()=>{
             label = "Edit Todo"
             value ={ workingTitle}
             onChange={handleEdit}
+
             />
+            <button type= "submit" >Save</button>
             <button type= "button" onClick={handleCancel}>Cancel</button>
-            <button type= "button" onClick={handleUpdate}>Update</button>
             </>
               ):(
                 <>
-                <label>
+                <label htmlFor={`checkbox-${todo.id}`}>
             <input
             type= "checkbox" id={`checkbox${todo.id}`} checked={todo.isCompleted} onChange={()=> onCompleteTodo(todo.id)}
             />
             </label>
-            <span onClick={()=> setIsEditing(true)}>{todo.title}</span>
+            <span onClick={()=> setIsEditing(true)} style = {{cursor:"pointer"}}>{todo.title}</span>
             </>
             )}
             </form>

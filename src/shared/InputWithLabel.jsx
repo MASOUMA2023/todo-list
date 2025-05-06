@@ -1,12 +1,12 @@
 import React from "react";
 
-function InputWithLabel({
+const InputWithLabel = React.forwardRef(function InputWithLabel({
   elementId,
   label,
   onChange,
-  value,
-  ref,
-}) {
+  value},
+  ref
+) {
   return (
     <>
       <label htmlFor={elementId}>{label}</label>
@@ -19,6 +19,6 @@ function InputWithLabel({
       />
     </>
   );
-}
+})
 
 export default InputWithLabel;

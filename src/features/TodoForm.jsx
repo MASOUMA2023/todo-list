@@ -4,15 +4,15 @@ import InputWithLabel from "../shared/InputWithLabel";
 
 const TodoForm= ({ onAddTodo }) => {
     const [workingTodo, setWorkingTodo]= useState("")
-const todoTitleInput = useRef('');
-const handleAddTodo = (event) => {
+const inputRef = useRef(null);
 
-      event.preventDefault();
+const handleAddTodo = (event) => {
+event.preventDefault();
     //   const title = event.target.title.value;
     //   console.log("Adding todo:", title)
-      onAddTodo(workingTodo);
+      onAddTodo({title:workingTodo, isCompleted:false});
       setWorkingTodo("")
-      todoTitleInput.current.focus();
+      inputRef.current.focus();
     }
     
     return (
@@ -20,7 +20,7 @@ const handleAddTodo = (event) => {
             <InputWithLabel 
             elementId="todoTitle"
             label="Todo" 
-            ref={todoTitleInput} 
+            ref={inputRef} 
             value= {workingTodo} 
             onChange={(e) => setWorkingTodo(e.target.value)}/>
                 <button 

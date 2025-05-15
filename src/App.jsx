@@ -67,7 +67,6 @@ function App() {
 
   const updateTodo = async (editedTodo)=>{
    const originalTodo= todoList.find((todo)=>todo.id === editedTodo.id)
-
     const updatedTodos = todoList.map((todo)=>
     todo.id === editedTodo.id ? {...todo, ...editedTodo}: todo)
     setTodoList(updatedTodos)
@@ -91,8 +90,9 @@ function App() {
       },
       body:JSON.stringify(payload),
     }
+    void (async()=>{
     try{
-      const resp =await fetch(`https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`, options)
+      const resp =await fetch(url, options)
       if(!resp.ok){
         throw new Error("Failed to update todo")
       }
@@ -100,13 +100,14 @@ function App() {
       console. error(error)
       setErrorMessage(`${error.message}.Reverting todo...`)
 
-      const revertedTodos = todoList.map((todo)=>
+      const revertedTodos =todoList.map((todo)=>
       todo.id === originalTodo.id ? originalTodo:todo)
       setTodoList(revertedTodos)
     }finally{
       setIsSaving(false)
     }
-  }
+  })()
+}
   const completeTodo = async (id)=>{
     const originalTodos= [...todoList];
     const updatedTodos= todoList.map((todo)=>
@@ -134,7 +135,7 @@ function App() {
     };
   
     try {
-      const resp = await fetch(encodeUrl({baseUrl:url, sortField, sortDirection, queryString}), options);
+      const resp = await fetch(url, options);
   
       if (!resp.ok) {
         throw new Error('Failed to update todo completion');
@@ -168,10 +169,10 @@ function App() {
         },
         body: JSON.stringify(payload),
       };
-    
+      setIsSaving(true);
+
       try {
-        setIsSaving(true);
-        const resp = await fetch(encodeUrl({baseUrl:url, sortField, sortDirection,queryString}), options);
+        const resp = await fetch(url, options);
     
         if (!resp.ok) {
           throw new Error('Failed to save todo');

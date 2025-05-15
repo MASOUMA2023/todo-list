@@ -2,13 +2,19 @@ import React from 'react';
 import TodoListItem from "./TodoListItem";
 
 
-function TodoList({ todoList, onCompleteTodo, onUpdateTodo }) {
+function TodoList({ todoList, onCompleteTodo, onUpdateTodo, isLoading }) {
+  if (isLoading ){
+    return <p>Todo list loading...</p>
+  }
+  if(todoList.length === 0){
+    return <p>No todos yet.Add one above!</p>
+  }
   const filteredTodoList = todoList.filter(todo => !todo.isCompleted);
   return (
     <div>
       <h2>Todo List</h2>
       { filteredTodoList.length === 0? (
-        <p>Add todo above to get started</p>
+        <p>All todos completed! Add more above if needed</p>
       ) : (
       <ul>
         {filteredTodoList.map((todo) => (

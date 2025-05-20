@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback} from 'react'
 import './App.css'
 import React from 'react';
 import TodoList from './features/TodoList/TodoList';
@@ -6,29 +6,27 @@ import TodoForm from './features/TodoForm';
 import TodosViewForm from './features/TodosViewForm'
 
 
-
-const encodeUrl = ({baseUrl, sortField, sortDirection, queryString})=>{
-  let sortQuery = `sort[0][field]=${sortField}&sort[0][direction]=${sortDirection}`
-  let searchQuery ="";
-  if(queryString){
-    searchQuery= `&filterByFormula=SEARCH("${queryString}",title)`
-  }
-  return encodeURI(`${baseUrl}?${sortQuery}${searchQuery}`)
-}
-
 function App() {
   const [todoList, setTodoList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage,setErrorMessage] = useState("");    
   const [isSaving, setIsSaving]= useState(false)
-  const [sortField, setSortField]= useState("createdTime")
+  const [sortField, setSortField]= useState("created Time")
   const [sortDirection, setSortDirection]= useState("desc")
   const [queryString, setQueryString] = useState("")
 
-
   const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
   const token = `Bearer ${import.meta.env.VITE_PAT}`;
-  
+
+  const encodeUrl = useCallback(()=>{
+    let sortQuery = `sort[0][field]=${sortField}&sort[0][direction]=${sortDirection}`
+    let searchQuery ="";
+    if(queryString){
+      searchQuery= `&filterByFormula=SEARCH("${queryString}",title)`
+    }
+    return encodeURI(`${url}?${sortQuery}${searchQuery}`)
+  }, [url, sortField, sortDirection, queryString])
+
   const normalizeTodo = (record)=>({
     id: record.id,
     ...record.fields,
@@ -37,19 +35,20 @@ function App() {
 
   useEffect(() => {
     const fetchTodos = async () => {
+      console.log("Encoded URL:", encodeUrl());
       setIsLoading(true);   
       setErrorMessage("");     
       try {
         
-        const response = await fetch(encodeUrl({baseUrl:url, sortField, sortDirection, queryString}), {
+        const response = await fetch(encodeUrl(), {
           method:"GET",
           headers: {
             Authorization: token,
           },
         });
         if (!response.ok) {
-          const errorDetails = await response.text();
-  console.log('Error Response:', errorDetails);
+          // const errorDetails = await response.text();
+  // console.log('Error Response:', errorDetails);
           throw new Error(response.statusText || "Failed to fetch todos");
         }
         const data = await response.json();
@@ -62,8 +61,9 @@ function App() {
         setIsLoading(false);   
       }
     };
+    
     fetchTodos();
-  }, [sortField, sortDirection, queryString]);
+  }, [encodeUrl]);
 
   const updateTodo = async (editedTodo)=>{
    const originalTodo= todoList.find((todo)=>todo.id === editedTodo.id)

@@ -25,8 +25,10 @@ const handleCancel =()=>{
      setIsEditing(false)
     }
     
-    
-                <>
+    return(
+        <li>
+          {isEditing ? (
+            <form onSubmit={handleUpdate}>
             < InputWithLabel
             elementId ={ `editTodo-${todo.id}`}
             label = "Edit Todo"
@@ -36,7 +38,7 @@ const handleCancel =()=>{
             />
             <button type= "submit" >Save</button>
             <button type= "button" onClick={handleCancel}>Cancel</button>
-            </>
+            </form>
               ):(
                 <>
                 <label htmlFor={`checkbox-${todo.id}`}>
@@ -47,9 +49,9 @@ const handleCancel =()=>{
             <span onClick={()=> setIsEditing(true)} style = {{cursor:"pointer"}}>{todo.title}</span>
             </>
             )}
-            </form>
-            </li>;
+            </li>
+       )}
             
-        }
+        
 
 export default TodoListItem;

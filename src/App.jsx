@@ -1,7 +1,7 @@
 
 import { useEffect, useState, useCallback} from 'react'
-
-import './App.css'
+import styles from './App.module.css'
+// import './App.css'
 import React from 'react';
 import TodoList from './features/TodoList/TodoList';
 import TodoForm from './features/TodoForm';
@@ -194,11 +194,11 @@ function App() {
 
   return (
     <>
-    <div className="App">
+    <div className={styles.appContainer}>
       {isLoading && <p>Loading Todos, please wait...</p>}
       {errorMessage && (
         <div>
-          <hr /><p style= {{color:"red"}}>{errorMessage}</p>
+          <hr /><p className={styles.errorMessage}>{errorMessage}</p>
       <button onClick={()=> setErrorMessage("")}>Dismiss</button>
       </div>
       )}

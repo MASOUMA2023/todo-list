@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from "react";
 import InputWithLabel from "../../shared/InputWithLabel";
-
+import styles from './TodoListItem.module.css'
 
 
 function TodoListItem({todo, onCompleteTodo, onUpdateTodo}){
@@ -26,7 +26,7 @@ const handleCancel =()=>{
     }
     
     return(
-        <li>
+        <li className={styles.todoListItem}>
           {isEditing ? (
             <form onSubmit={handleUpdate}>
             < InputWithLabel

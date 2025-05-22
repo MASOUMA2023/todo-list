@@ -1,0 +1,57 @@
+
+body, #root {
+    margin:0;
+    padding: 0;
+    background-color: #d8fbf5;
+    color:#333
+}
+
+/* heading */
+h1,h2{
+    color: #0d3a9b;
+    margin-bottom: 0.5em;
+  }
+
+  p, label {
+    font-size: 1rem
+    color: #0d3a9b
+    background-color: #007bff
+  }
+
+  button:hover {
+    background-color: #2adcdc;
+  }
+
+  button{
+  background-color:  #2adcdc;
+  color: white;
+  border: none;
+  padding: 0.5em 1em;
+  border-radius: 4px;
+  cursor: pointer;
+  }
+
+  option{
+    background-color: #2adcdc;
+  }
+
+
+  .App{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 2rem;
+  }
+
+.error-message{
+ color:red}
+
+ .input-clear,.button-clear {
+ margin-left: 0.5rem}
+
+ .sorting-container{
+ margin-top: 1rem}
+
+ .sort-direction{
+  margin-left: 1rem}

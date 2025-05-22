@@ -1,6 +1,32 @@
 
 import React, {useState, useEffect} from "react";
+import styled from 'styled-components'
 
+
+const StyledForm = styled.form`
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding:0.5rem
+    `
+    const StyledButton = styled.button`
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    `
+    const StyledInput = styled.input`
+    padding: 0.5rem;
+    font-size: 1rem;
+    `
+    const StyledDiv = styled.div`
+    display:flex;
+    gap:0.5rem;
+    align-item:center;
+    flex-wrap: wrap;
+    `
+    const StyledSelect = styled.select`
+    padding: 0.5rem
+    font=size: 1rem
+    `
 
 function TodosViewForm ({sortField, setSortField, sortDirection, setSortDirection, queryString,setQueryString}) {
     const [localQueryString, setLocalQueryString] = useState(queryString);
@@ -23,34 +49,34 @@ function TodosViewForm ({sortField, setSortField, sortDirection, setSortDirectio
     }
 
     return (
-        <form onSubmit={(e)=>e.preventDefault()}>
+        <StyledForm onSubmit={(e)=>e.preventDefault()}>
 
-           <div>
+           <StyledDiv>
               <label htmlFor="search" >Search Todos</label>
 
-              <input id="search" type="text" value={localQueryString} onChange={(e)=> setLocalQueryString(e.target.value)}
-               style={{marginLeft:"0.5rem"}}
+              <StyledInput id="search" type="text" value={localQueryString} onChange={(e)=> setLocalQueryString(e.target.value)}
+               className="input-clear"
               />
-              <button type="button" onClick={()=>setLocalQueryString("")} style= {{marginLeft: "0.5rem"}}>Clear</button>
+              <StyledButton type="button" onClick={()=>setLocalQueryString("")} className="button-clear">Clear</StyledButton>
 
-           </div>
+           </StyledDiv>
 
-            <div style={{marginTop: "1rem"}}>
+            <StyledDiv className="sorting-container">
            <label htmlFor="sortField">Sorted By: </label>
 
-           <select id="sortField" value={sortField} onChange={(e) => setSortField(e.target.value)}>
+           <StyledSelect id="sortField" value={sortField} onChange={(e) => setSortField(e.target.value)}>
             <option value="created Time">Time added</option>
             <option value="title">Title</option>
 
-           </select>
+           </StyledSelect>
 
-           <label htmlFor="sortDirection" style={{ marginLeft: "1rem" }}> Direction:{""} </label>
-        <select id="sortDirection" value={sortDirection} onChange={handleSortDirectionChange}>
+           <label htmlFor="sortDirection" className="sort-direction"> Direction:{""} </label>
+        <StyledSelect id="sortDirection" value={sortDirection} onChange={handleSortDirectionChange}>
           <option value="asc">Ascending</option>
           <option value="desc">Descending</option>
-        </select>
-            </div>
-        </form>
+        </StyledSelect>
+            </StyledDiv>
+        </StyledForm>
     )
 }
 

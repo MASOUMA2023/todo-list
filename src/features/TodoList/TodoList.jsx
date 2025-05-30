@@ -16,7 +16,7 @@ function TodoList({ todoList, onCompleteTodo, onUpdateTodo, isLoading }) {
       { filteredTodoList.length === 0? (
         <p>All todos completed! Add more above if needed</p>
       ) : (
-      <ul className='{styles.todoList'>
+      <ul className={styles.todoList}>
         {filteredTodoList.map((todo) => (
           <TodoListItem key={todo.id} todo={todo} onCompleteTodo= {onCompleteTodo} onUpdateTodo={onUpdateTodo} />
         ))}

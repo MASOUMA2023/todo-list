@@ -20,12 +20,12 @@ const StyledForm = styled.form`
     const StyledDiv = styled.div`
     display:flex;
     gap:0.5rem;
-    align-item:center;
+    align-items:center;
     flex-wrap: wrap;
     `
     const StyledSelect = styled.select`
-    padding: 0.5rem
-    font=size: 1rem
+    padding: 0.5rem;
+    font-size: 1rem;
     `
 
 function TodosViewForm ({sortField, setSortField, sortDirection, setSortDirection, queryString,setQueryString}) {
@@ -50,6 +50,7 @@ function TodosViewForm ({sortField, setSortField, sortDirection, setSortDirectio
 
     return (
         <StyledForm onSubmit={(e)=>e.preventDefault()}>
+
 
            <StyledDiv>
               <label htmlFor="search" >Search Todos</label>

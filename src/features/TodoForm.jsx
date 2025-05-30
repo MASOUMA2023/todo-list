@@ -1,6 +1,24 @@
 import React, {useState, useRef} from "react";
 import InputWithLabel from "../shared/InputWithLabel";
+import styled from 'styled-components';
 
+
+const StyledForm = styled.form`
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    `
+    const StyledButton = styled.button`
+    padding: 0.5rem 1rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    `
+    const StyledInput = styled.input`
+    padding: 0.5rem;
+    font-size: 1rem;
+    `
 
 const TodoForm= ({ onAddTodo }) => {
     const [workingTodo, setWorkingTodo]= useState("")
@@ -8,26 +26,27 @@ const inputRef = useRef(null);
 
 const handleAddTodo = (event) => {
 event.preventDefault();
-    //   const title = event.target.title.value;
-    //   console.log("Adding todo:", title)
+   
       onAddTodo({title:workingTodo, isCompleted:false});
       setWorkingTodo("")
       inputRef.current.focus();
     }
+
+
     
     return (
-        <form onSubmit= {handleAddTodo}>
-            <InputWithLabel 
+        <StyledForm onSubmit= {handleAddTodo}>
+            <InputWithLabel
             elementId="todoTitle"
             label="Todo" 
             ref={inputRef} 
             value= {workingTodo} 
             onChange={(e) => setWorkingTodo(e.target.value)}/>
-                <button 
+                <StyledButton 
             type="submit" disabled= {workingTodo.trim()===""}>
                 Add Todo
-                </button>
-        </form>
+                </StyledButton>
+        </StyledForm>
     )
 }
 

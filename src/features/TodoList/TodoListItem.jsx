@@ -46,7 +46,7 @@ const handleCancel =()=>{
             type= "checkbox" id={`checkbox-${todo.id}`} checked={todo.isCompleted} onChange={()=> onCompleteTodo(todo.id)}
             />
             </label>
-            <span onClick={()=> setIsEditing(true)} style = {{cursor:"pointer"}}>{todo.title}</span>
+            <span onClick={()=> setIsEditing(true)} style = {{cursor:"pointer"}}>{todo.title || "Untitled Todo"}</span>
             </>
             )}
             </li>

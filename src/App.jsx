@@ -3,11 +3,12 @@ import { useEffect, useReducer, useCallback, useState} from 'react'
 import styles from './App.module.css'
 // import './App.css'
 import React from 'react';
-import TodoList from './features/TodoList/TodoList';
-import TodoForm from './features/TodoForm';
-import TodosViewForm from './features/TodosViewForm'
+import {Routes, Route, useLocation} from 'react-router-dom'
+import TodosPage from './pages/TodosPage'
+import Header from './shared/Header'
 import { todosReducer, initialState as initialTodosState, actions as todoActions}  from './reducers/todos.reducer';
-
+import About from './pages/About';
+import NotFound from './pages/NotFound';
 
 function App() {
   const [todoState, dispatch] = useReducer(todosReducer, initialTodosState);
@@ -16,14 +17,27 @@ const {sortField,sortDirection, queryString}= todoState;
   const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
   const token = `Bearer ${import.meta.env.VITE_PAT}`;
 
-  const encodeUrl = useCallback(()=>{
-    let sortQuery = `sort[0][field]=${todoState.sortField}&sort[0][direction]=${todoState.sortDirection}`
-    let searchQuery ="";
-    if(queryString){
-      searchQuery= `&filterByFormula=SEARCH("${todoState.queryString}",title)`
+  const location = useLocation();
+  const [title, setTitle]= useState('')
+  useEffect(() => {
+    switch (location.pathname) {
+      case '/':
+        setTitle('My Todo App');
+        break;
+      case '/about':
+        setTitle('About');
+        break;
+      default:
+        setTitle('Not Found');
     }
+  }, [location]);
+
+  const encodeUrl = useCallback(()=>{
+    let sortQuery = `sort[0][field]=${sortField}&sort[0][direction]=${sortDirection}`
+    let searchQuery =queryString ? `&filterByFormula=SEARCH("${queryString}",title)`:'';
+    
     return encodeURI(`${url}?${sortQuery}${searchQuery}`)
-  }, [url, todoState.sortField, todoState.sortDirection, todoState.queryString])
+  }, [url, sortField, sortDirection, queryString])
 
   const normalizeTodo = (record)=>({
     id: record.id,
@@ -43,15 +57,13 @@ const {sortField,sortDirection, queryString}= todoState;
           },
         });
         if (!response.ok) {
-          // const errorDetails = await response.text();
-  // console.log('Error Response:', errorDetails);
-          throw new Error(response.statusText || "Failed to fetch todos");
+          throw new Error(response.statusText);
         }
         const data = await response.json();
         const fetchedTodos = data.records.map(normalizeTodo)
       dispatch ({ type: todoActions.loadTodos, payload: fetchedTodos})
       } catch (error) {
-        dispatch({ type: todoActions.setLoadError, payload: error.message || "Something went wrong"});
+        dispatch({ type: todoActions.setLoadError, payload: error.message || "Failed to load Todos"});
       } 
       }
     fetchTodos();
@@ -77,7 +89,7 @@ const {sortField,sortDirection, queryString}= todoState;
     const options = {
       method:"PATCH",
       headers:{
-        Authorization: `Bearer ${import.meta.env.VITE_PAT}`,
+        Authorization: token,
       "Content-Type": "application/json",
       },
       body:JSON.stringify(payload),
@@ -105,11 +117,9 @@ const {sortField,sortDirection, queryString}= todoState;
     dispatch({ type: todoActions.completeTodo, payload: updatedTodos })
     const payload = {
       records: [
-        {
-          id:updatedTodos.id,
+        { id:updatedTodos.id,
           fields: {
-            isCompleted: updatedTodos.isCompleted,
-          },
+            isCompleted: updatedTodos.isCompleted,},
         },
       ],
     };
@@ -118,8 +128,7 @@ const {sortField,sortDirection, queryString}= todoState;
       method: 'PATCH',
       headers: {
         Authorization: token,
-        'Content-Type': 'application/json',
-      },
+        'Content-Type': 'application/json',},
       body: JSON.stringify(payload),
     };
   
@@ -129,14 +138,10 @@ const {sortField,sortDirection, queryString}= todoState;
       if (!resp.ok) {
         throw new Error('Failed to update todo completion');
       }
-      // const { records } =await resp.json();
-
-      // const savedTodo = normalizeTodo(records[0])
-      // setTodoList([...todoList, savedTodo]);
     } catch (error) {
       dispatch({
         type: todoActions.setLoadError,
-        payload: error.message || "Couldn't complete todo",
+        payload: error.message,
       });
       dispatch({
         type: todoActions.revertTodo,
@@ -178,7 +183,7 @@ const {sortField,sortDirection, queryString}= todoState;
     
         dispatch ({type: todoActions.addTodo, payload: savedTodo})
       } catch (error) {
-       dispatch({type: todoActions.setLoadError, payload: error.message || 'Something went wrong while adding todo'});
+       dispatch({type: todoActions.setLoadError, payload: error.message});
       } finally {
         dispatch({type: todoActions.endRequest})
       }
@@ -187,23 +192,23 @@ const {sortField,sortDirection, queryString}= todoState;
   return (
     <>
     <div className={styles.appContainer}>
+    <Header title={title} />
       {todoState.isLoading && <p>Loading Todos, please wait...</p>}
       {todoState.errorMessage && (
         <div>
-          <hr /><p className={styles.errorMessage}>{todoState.errorMessage}</p>
+          <p className={styles.errorMessage}>{todoState.errorMessage}</p>
       <button onClick={()=> dispatch({type: todoActions.clearError})}>Dismiss</button>
       </div>
       )}
-      <h1>My Todo App</h1>
-      <TodoForm onAddTodo={addTodo} isSaving={todoState.isSaving}  />
-      <TodoList todoList={todoState.todoList} onUpdateTodo={updateTodo} onCompleteTodo={completeTodo} isLoading={todoState.isLoading} />
-      <hr />
-      <TodosViewForm sortField={sortField}
-  setSortField={(value) => dispatch({ type: todoActions.setSortField, payload: value })}
-  sortDirection={sortDirection}
-  setSortDirection={(value) => dispatch({ type: todoActions.setSortDirection, payload: value })}
-  queryString={queryString}
-  setQueryString={(value) => dispatch({ type: todoActions.setQueryString, payload: value })} />
+    <Routes>
+      <Route path='/' element={
+        <TodosPage todoState={todoState}
+        dispatch={dispatch} onAddTodo={addTodo}
+        onUpdateTodo={updateTodo} onCompleteTodo={completeTodo}/>
+      }/>
+      <Route path='/about' element={<About />}/>
+      <Route path='*' element={<NotFound/>}/>
+    </Routes>
     </div>
     </>
   )

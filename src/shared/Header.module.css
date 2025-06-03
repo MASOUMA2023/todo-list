@@ -1,0 +1,28 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    position: relative;
+  }
+  
+  .title {
+    text-align: center;
+    margin: 0 auto;
+  }
+  
+  .nav {
+    position:fixed;
+    right: 90px;
+    top:80px;
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .active {
+    color: gray;
+  }
+  
+  .inactive {
+    color: rgb(35, 6, 249);
+  }
